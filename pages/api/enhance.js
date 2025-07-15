@@ -8,7 +8,7 @@ const openai = new OpenAIApi(configuration);
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json({ error: "Only POST supported" });
   }
 
   const { prompt } = req.body;
@@ -19,15 +19,15 @@ export default async function handler(req, res) {
 
   try {
     const completion = await openai.createChatCompletion({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: "You are a helpful assistant." },
-        { role: "user", content: prompt },
-      ],
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 300,
+      temperature: 0.7,
     });
 
     res.status(200).json({ result: completion.data.choices[0].message.content });
   } catch (error) {
-    res.status(500).json({ error: error.message || "OpenAI error" });
+    console.error("OpenAI error:", error);
+    res.status(500).json({ error: "Internal server error." });
   }
 }
