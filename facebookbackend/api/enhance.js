@@ -1,5 +1,8 @@
 export default async function handler(req, res) {
-  const apiKey = process.env.OPENAI_API_KEY;
+ const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Only POST supported' });
